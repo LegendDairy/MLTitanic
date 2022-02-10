@@ -1,6 +1,15 @@
 import re
 
+import numpy as np
 from regression_model import config
+
+
+def get_first_cabin(row):
+    """Retain only the first cabin if more than 1 are available per passenger"""
+    try:
+        return row.split()[0]
+    except:
+        return np.nan
 
 
 class ExtractLetterTransformer:
@@ -19,6 +28,7 @@ class ExtractLetterTransformer:
         X = X.copy()
 
         for feature in self.variables:
+            X[feature] = X[feature].apply(get_first_cabin)
             X[feature] = X[feature].str[0]
 
         return X
@@ -56,5 +66,23 @@ class ExtractTitleTransformer:
 
         X[config.model_config.new_title_variable] = X[self.variable].apply(get_title)
         X.drop(self.variable, axis=1, inplace=True)
+
+        return X
+
+
+class RemoveQuestionMarks:
+    # Extract title from name variable and removes name variable
+
+    def fit(self, X, y=None):
+        return self
+
+    def transform(self, X):
+        X = X.copy()
+
+        X = X.replace(config.model_config.missing_variable_id, np.nan)
+
+        # Cast numerical values to floats
+        for var in config.model_config.variables_to_recast_to_flt:
+            X[var] = X[var].astype('float')
 
         return X

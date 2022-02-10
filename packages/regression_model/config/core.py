@@ -35,7 +35,7 @@ class ModelConfig(BaseModel):
     target: str
     variable_to_extract_title: str
     new_title_variable: str
-    variable_to_get_cabin_goup: str
+    variable_to_get_cabin_goup: List[str]
     variables_to_drop: List[str]
     variables_to_recast_to_flt: List[str]
     features: List[str]

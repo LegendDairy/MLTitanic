@@ -17,9 +17,10 @@ missing_variable_id: "?"
 target: survived
 
 variable_to_extract_title: name
-new_title_variable: titel
+new_title_variable: title
 
-variable_to_get_cabin_goup: cabin
+variable_to_get_cabin_goup:
+  - cabin
 
 variables_to_drop:
   - name
@@ -33,6 +34,7 @@ variables_to_recast_to_flt:
   - fare
 
 features:
+  - name
   - pclass
   - age
   - sibsp

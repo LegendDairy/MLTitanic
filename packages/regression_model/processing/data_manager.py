@@ -16,11 +16,8 @@ def download_dataset() -> None:
 
 def load_dataset(*, file_name: str) -> pd.DataFrame:
     dataframe = pd.read_csv(Path(f"{DATASET_DIR}/{file_name}"))
-    dataframe["MSSubClass"] = dataframe["MSSubClass"].astype("O")
 
-    # rename variables beginning with numbers to avoid syntax errors later
-    transformed = dataframe.rename(columns=config.model_config.variables_to_rename)
-    return transformed
+    return dataframe
 
 
 def save_pipeline(*, pipeline_to_persist: Pipeline) -> None:
