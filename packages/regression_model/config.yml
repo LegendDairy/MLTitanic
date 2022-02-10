@@ -1,0 +1,70 @@
+# Package Overview
+package_name: regression_model
+
+
+# Data File
+data_url: https://www.openml.org/data/get_csv/16826755/phpMYEkMl
+data_file: raw.csv
+
+
+pipeline_name: regression_model
+pipeline_save_file: regression_model_output_v
+
+missing_variable_id: "?"
+
+# Variables
+# The variable we are attempting to predict (survived)
+target: survived
+
+variable_to_extract_title: name
+new_title_variable: titel
+
+variable_to_get_cabin_goup: cabin
+
+variables_to_drop:
+  - name
+  - ticket
+  - boat
+  - body
+  - home.dest
+
+variables_to_recast_to_flt:
+  - age
+  - fare
+
+features:
+  - pclass
+  - age
+  - sibsp
+  - parch
+  - fare
+  - sex
+  - cabin
+  - embarked
+  #- title
+
+categorical_vars:
+  - sex
+  - cabin
+  - embarked
+  - title
+
+numerical_vars:
+  - pclass
+  - age
+  - sibsp
+  - parch
+  - fare
+
+# set train/test split
+test_size: 0.1
+
+# to set the random seed
+random_state: 0
+
+# Hyperparameter
+C: 0.001
+
+rare_label_tol: 0.05
+
+
