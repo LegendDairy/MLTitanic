@@ -1,7 +1,8 @@
 from feature_engine.encoding import RareLabelEncoder
 from feature_engine.imputation import CategoricalImputer, AddMissingIndicator, MeanMedianImputer
 from regression_model import config
-from regression_model.processing.features import ExtractLetterTransformer, ExtractTitleTransformer, RemoveQuestionMarks
+from regression_model.processing.features import ExtractLetterTransformer, ExtractTitleTransformer, RemoveQuestionMarks, \
+    RecastVariables
 from sklearn.linear_model import LogisticRegression
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import StandardScaler
@@ -12,8 +13,11 @@ from feature_engine.encoding import OneHotEncoder
 titanic_pipe = Pipeline([
 
     # ===== IMPUTATION =====
-    #RemoveQuestionMarks
+    # replace question marks with np.nan
     ('remove_question_marks', RemoveQuestionMarks()),
+
+    # recast strings to floats
+    ('recast_variables', RecastVariables(variables=config.model_config.variables_to_recast_to_flt)),
 
 
     # Extract title from name variable

@@ -81,6 +81,24 @@ class RemoveQuestionMarks:
 
         X = X.replace(config.model_config.missing_variable_id, np.nan)
 
+        return X
+
+
+class RecastVariables:
+    # Recast strings to floats
+
+    def __init__(self, variables):
+        if not isinstance(variables, list):
+            raise ValueError('Variables should be a list')
+
+        self.variables = variables
+
+    def fit(self, X, y=None):
+        return self
+
+    def transform(self, X):
+        X = X.copy()
+
         # Cast numerical values to floats
         for var in config.model_config.variables_to_recast_to_flt:
             X[var] = X[var].astype('float')
