@@ -1,5 +1,5 @@
 # Package Overview
-package_name: regression_model
+package_name: classification_model
 
 
 # Data File
@@ -7,8 +7,8 @@ data_url: https://www.openml.org/data/get_csv/16826755/phpMYEkMl
 data_file: raw.csv
 
 
-pipeline_name: regression_model
-pipeline_save_file: regression_model_output_v
+pipeline_name: classification_model
+pipeline_save_file: classification_model_output_v
 
 missing_variable_id: "?"
 
@@ -49,7 +49,6 @@ categorical_vars:
   - sex
   - cabin
   - embarked
-  - title
 
 numerical_vars:
   - pclass
@@ -57,6 +56,9 @@ numerical_vars:
   - sibsp
   - parch
   - fare
+
+feat_eng_cat_vars:
+  - title
 
 # set train/test split
 test_size: 0.1

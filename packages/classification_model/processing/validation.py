@@ -2,9 +2,10 @@ from typing import List, Optional, Tuple
 
 import numpy as np
 import pandas as pd
+from classification_model.pipeline import pp_pipe
 from pydantic import BaseModel, ValidationError
 
-from regression_model.config.core import config
+from classification_model.config.core import config
 
 
 def validate_inputs(*, input_data: pd.DataFrame) -> Tuple[pd.DataFrame, Optional[dict]]:
@@ -14,10 +15,13 @@ def validate_inputs(*, input_data: pd.DataFrame) -> Tuple[pd.DataFrame, Optional
     relevant_data = input_data[config.model_config.features].copy()
     errors = None
 
+    # pre-process the data
+    pp_data = pp_pipe.fit_transform(relevant_data, None)
+
     try:
         # replace numpy nans so that pydantic can validate
         MultipleTitanicDataInputs(
-            inputs=relevant_data.replace({np.nan: None}).to_dict(orient="records")
+            inputs=pp_data.replace({np.nan: None}).to_dict(orient="records")
         )
     except ValidationError as error:
         errors = error.json()

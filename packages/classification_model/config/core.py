@@ -4,10 +4,10 @@ from typing import List
 from pydantic import BaseModel
 from strictyaml import YAML, load
 
-import regression_model
+import classification_model
 
 # Project Directories
-PACKAGE_ROOT = Path(regression_model.__file__).resolve().parent
+PACKAGE_ROOT = Path(classification_model.__file__).resolve().parent
 ROOT = PACKAGE_ROOT.parent
 CONFIG_FILE_PATH = PACKAGE_ROOT / "config.yml"
 DATASET_DIR = PACKAGE_ROOT / "dataset"
@@ -41,6 +41,7 @@ class ModelConfig(BaseModel):
     features: List[str]
     categorical_vars: List[str]
     numerical_vars: List[str]
+    feat_eng_cat_vars: List[str]
     test_size: float
     random_state: int
     C: float

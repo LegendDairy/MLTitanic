@@ -1,7 +1,8 @@
 import re
 
 import numpy as np
-from regression_model import config
+from classification_model import config
+from sklearn.base import BaseEstimator, TransformerMixin
 
 
 def get_first_cabin(row):
@@ -12,7 +13,7 @@ def get_first_cabin(row):
         return np.nan
 
 
-class ExtractLetterTransformer:
+class ExtractLetterTransformer(BaseEstimator, TransformerMixin):
     # Extract fist letter of variable
 
     def __init__(self, variables):
@@ -49,7 +50,7 @@ def get_title(passenger):
         return 'Other'
 
 
-class ExtractTitleTransformer:
+class ExtractTitleTransformer(BaseEstimator, TransformerMixin):
     # Extract title from name variable and removes name variable
 
     def __init__(self, variable):
@@ -70,7 +71,7 @@ class ExtractTitleTransformer:
         return X
 
 
-class RemoveQuestionMarks:
+class RemoveQuestionMarks(BaseEstimator, TransformerMixin):
     # Extract title from name variable and removes name variable
 
     def fit(self, X, y=None):
@@ -84,7 +85,7 @@ class RemoveQuestionMarks:
         return X
 
 
-class RecastVariables:
+class RecastVariables(BaseEstimator, TransformerMixin):
     # Recast strings to floats
 
     def __init__(self, variables):
