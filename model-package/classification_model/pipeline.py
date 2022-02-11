@@ -1,26 +1,15 @@
 from feature_engine.encoding import RareLabelEncoder
 from feature_engine.imputation import CategoricalImputer, AddMissingIndicator, MeanMedianImputer
 from classification_model import config
-from classification_model.processing.features import ExtractLetterTransformer, ExtractTitleTransformer, \
-    RemoveQuestionMarks, RecastVariables
+from classification_model.processing.features import ExtractLetterTransformer, ExtractTitleTransformer
 from sklearn.linear_model import LogisticRegression
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import StandardScaler
 from feature_engine.encoding import OneHotEncoder
 
-# Pre-processing Pipeline
-pp_pipe = Pipeline([
-    # replace question marks with np.nan
-    ('remove_question_marks', RemoveQuestionMarks()),
-
-    # recast strings to floats
-    ('recast_variables', RecastVariables(variables=config.model_config.variables_to_recast_to_flt))
-])
 
 # Main Pipeline
 titanic_pipe = Pipeline([
-
-    ('pp_pipe', pp_pipe),
 
     # ===== IMPUTATION =====
     # impute categorical variables with string 'missing'

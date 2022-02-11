@@ -3,6 +3,7 @@ from pathlib import Path
 
 import joblib
 import pandas as pd
+from classification_model.pp_pipeline import pp_pipe
 from sklearn.pipeline import Pipeline
 
 from classification_model import __version__ as _version
@@ -15,9 +16,12 @@ def download_dataset() -> None:
     df.to_csv(Path(f"{DATASET_DIR}/{config.app_config.data_file}"), index=False)
 
 def load_dataset(*, file_name: str) -> pd.DataFrame:
-    dataframe = pd.read_csv(Path(f"{DATASET_DIR}/{file_name}"))
+    df = pd.read_csv(Path(f"{DATASET_DIR}/{file_name}"))
 
-    return dataframe
+    # pre-process the data
+    pp_data = pp_pipe.fit_transform(df, None)
+
+    return pp_data
 
 
 def save_pipeline(*, pipeline_to_persist: Pipeline) -> None:

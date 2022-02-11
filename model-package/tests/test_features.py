@@ -1,6 +1,6 @@
 from classification_model import config
 from classification_model.processing.features import ExtractLetterTransformer, ExtractTitleTransformer
-from classification_model.pipeline import pp_pipe
+from classification_model.pp_pipeline import pp_pipe
 
 
 def test_feature_engineering_transformers(sample_input_data):
