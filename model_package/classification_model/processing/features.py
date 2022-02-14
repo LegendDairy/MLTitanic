@@ -1,15 +1,16 @@
 import re
 
 import numpy as np
-from classification_model import config
 from sklearn.base import BaseEstimator, TransformerMixin
+
+from classification_model import config
 
 
 def get_first_cabin(row):
     """Retain only the first cabin if more than 1 are available per passenger"""
     try:
         return row.split()[0]
-    except:
+    except AttributeError:
         return np.nan
 
 
@@ -18,7 +19,7 @@ class ExtractLetterTransformer(BaseEstimator, TransformerMixin):
 
     def __init__(self, variables):
         if not isinstance(variables, list):
-            raise ValueError('Variables should be a list')
+            raise ValueError("Variables should be a list")
 
         self.variables = variables
 
@@ -38,16 +39,16 @@ class ExtractLetterTransformer(BaseEstimator, TransformerMixin):
 def get_title(passenger):
     """"Helper function to extract title from a name."""
     line = passenger
-    if re.search('Mrs', line):
-        return 'Mrs'
-    elif re.search('Mr', line):
-        return 'Mr'
-    elif re.search('Miss', line):
-        return 'Miss'
-    elif re.search('Master', line):
-        return 'Master'
+    if re.search("Mrs", line):
+        return "Mrs"
+    elif re.search("Mr", line):
+        return "Mr"
+    elif re.search("Miss", line):
+        return "Miss"
+    elif re.search("Master", line):
+        return "Master"
     else:
-        return 'Other'
+        return "Other"
 
 
 class ExtractTitleTransformer(BaseEstimator, TransformerMixin):
@@ -55,7 +56,7 @@ class ExtractTitleTransformer(BaseEstimator, TransformerMixin):
 
     def __init__(self, variable):
         if not isinstance(variable, str):
-            raise ValueError('Variable should be a string')
+            raise ValueError("Variable should be a string")
 
         self.variable = variable
 
@@ -90,7 +91,7 @@ class RecastVariables(BaseEstimator, TransformerMixin):
 
     def __init__(self, variables):
         if not isinstance(variables, list):
-            raise ValueError('Variables should be a list')
+            raise ValueError("Variables should be a list")
 
         self.variables = variables
 
@@ -102,6 +103,6 @@ class RecastVariables(BaseEstimator, TransformerMixin):
 
         # Cast numerical values to floats
         for var in config.model_config.variables_to_recast_to_flt:
-            X[var] = X[var].astype('float')
+            X[var] = X[var].astype("float")
 
         return X

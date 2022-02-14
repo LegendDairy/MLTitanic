@@ -1,8 +1,8 @@
 import pytest
+from sklearn.model_selection import train_test_split
 
 from classification_model.config.core import config
 from classification_model.processing.data_manager import load_dataset
-from sklearn.model_selection import train_test_split
 
 
 @pytest.fixture()

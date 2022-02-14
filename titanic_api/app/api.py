@@ -1,16 +1,16 @@
 import json
 from typing import Any
 
-import pandas as pd
 import numpy as np
+import pandas as pd
+from classification_model import __version__ as model_version
+from classification_model.predict import make_prediction
 from fastapi import APIRouter, HTTPException
 from fastapi.encoders import jsonable_encoder
 from loguru import logger
 
-from app.config import settings
 from app import __version__, schemas
-from classification_model import __version__ as model_version
-from classification_model.predict import make_prediction
+from app.config import settings
 
 api_router = APIRouter()
 
@@ -48,6 +48,6 @@ async def predict(input_data: schemas.MultipleTitanicDataInputs) -> Any:
     logger.info(f"Prediction results: {results.get('predictions').tolist()}")
 
     # results are a numpy array so convert to list for validation
-    results["predictions"] = results.get('predictions').tolist()
+    results["predictions"] = results.get("predictions").tolist()
 
     return results

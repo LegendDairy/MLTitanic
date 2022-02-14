@@ -1,5 +1,4 @@
 from typing import Any, List, Optional
-import numpy as np
 
 from classification_model.processing.validation import TitanicDataInputSchema
 from pydantic import BaseModel

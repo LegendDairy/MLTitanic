@@ -1,5 +1,3 @@
-import math
-
 import numpy as np
 
 from classification_model.predict import make_prediction

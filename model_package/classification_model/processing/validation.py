@@ -2,13 +2,13 @@ from typing import List, Optional, Tuple
 
 import numpy as np
 import pandas as pd
-from classification_model.pp_pipeline import pp_pipe
 from pydantic import BaseModel, ValidationError
 
 from classification_model.config.core import config
+from classification_model.pp_pipeline import pp_pipe
 
 
-def validate_inputs(*, input_data: pd.DataFrame) -> Tuple[pd.DataFrame, Optional[dict]]:
+def validate_inputs(*, input_data: pd.DataFrame) -> Tuple[pd.DataFrame, Optional[str]]:
     """Check model inputs for unprocessable values."""
 
     # convert syntax error field names (beginning with numbers)

@@ -3,17 +3,18 @@ from pathlib import Path
 
 import joblib
 import pandas as pd
-from classification_model.pp_pipeline import pp_pipe
 from sklearn.pipeline import Pipeline
 
 from classification_model import __version__ as _version
 from classification_model.config.core import DATASET_DIR, TRAINED_MODEL_DIR, config
+from classification_model.pp_pipeline import pp_pipe
 
 
 def download_dataset() -> None:
     """Download the dataset from online source."""
     df = pd.read_csv(config.app_config.data_url)
     df.to_csv(Path(f"{DATASET_DIR}/{config.app_config.data_file}"), index=False)
+
 
 def load_dataset(*, file_name: str) -> pd.DataFrame:
     df = pd.read_csv(Path(f"{DATASET_DIR}/{file_name}"))
