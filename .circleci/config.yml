@@ -1,0 +1,211 @@
+version: 2
+
+defaults: &defaults
+  docker:
+    - image: circleci/python:3.8.12
+  working_directory: ~/project
+
+prepare_venv: &prepare_venv
+  run:
+    name: Create venv
+    command: |
+      python3 -m venv venv
+      source venv/bin/activate
+      pip install --upgrade pip
+
+prepare_tox: &prepare_tox
+  run:
+    name: Install tox
+    command: |
+      sudo pip install --upgrade pip
+      pip install --user tox
+
+#fetch_data: &fetch_data
+#  run:
+#    name: Set script permissions and fetch data
+#    command: |
+#      source venv/bin/activate
+#      chmod +x ./scripts/fetch_kaggle_dataset.sh
+#      ./scripts/fetch_kaggle_dataset.sh
+
+jobs:
+  section_07_test_app:
+    <<: *defaults
+    working_directory: ~/project/app
+    steps:
+      - checkout:
+          path: ~/project
+      - *prepare_tox
+      - run:
+          name: Runnning app tests
+          command: |
+            tox
+
+  section_07_deploy_app_to_heroku:
+    <<: *defaults
+    steps:
+      - checkout:
+          path: ~/project
+      - run:
+          name: Deploy to Heroku
+          command: |
+            git push https://heroku:$HEROKU_API_KEY@git.heroku.com/$HEROKU_APP_NAME.git master
+
+  section_07_test_and_upload_classification_model:
+    <<: *defaults
+    working_directory: ~/project/model_package
+    steps:
+      - checkout:
+          path: ~/project
+      - *prepare_tox
+      #- run:
+      #    name: Fetch the data
+      #    command: |
+      #      tox -e fetch_data
+      - run:
+          name: Test the model
+          command: |
+            tox
+      #- run:
+      #    name: Publish model to Gemfury
+      #    command: |
+      #      tox -e publish_model
+
+
+
+
+  test_classification_model_py36:
+    docker:
+      - image: circleci/python:3.6.9
+    working_directory: ~/project/model_package/classification_model
+    steps:
+      - checkout:
+          path: ~/project
+      - run:
+          name: Run tests with Python 3.6
+          command: |
+            sudo pip install --upgrade pip
+            pip install --user tox
+            tox -e py36
+
+  test_classification_model_py37:
+    docker:
+      - image: circleci/python:3.7.6
+    working_directory: ~/project/model_package/classification_model
+    steps:
+      - checkout:
+          path: ~/project
+      - run:
+          name: Run tests with Python 3.7
+          command: |
+            sudo pip install --upgrade pip
+            pip install --user tox
+            tox -e py37
+
+  test_classification_model_py38:
+    docker:
+      - image: circleci/python:3.8.0
+    working_directory: ~/project/model_package/classification_model
+    steps:
+      - checkout:
+          path: ~/project
+      - run:
+          name: Run tests with Python 3.8
+          command: |
+            sudo pip install --upgrade pip
+            pip install --user tox
+            tox -e py38
+
+  test_ml_api_py36:
+    docker:
+      - image: circleci/python:3.6.9
+    working_directory: ~/project/app
+    steps:
+      - checkout:
+          path: ~/project
+      - run:
+          name: Run API tests with Python 3.6
+          command: |
+            sudo pip install --upgrade pip
+            pip install --user tox
+            tox -e py36
+
+  test_ml_api_py37:
+    docker:
+      - image: circleci/python:3.7.6
+    working_directory: ~/project/app
+    steps:
+      - checkout:
+          path: ~/project
+      - run:
+          name: Run API tests with Python 3.7
+          command: |
+            sudo pip install --upgrade pip
+            pip install --user tox
+            tox -e py37
+
+  test_ml_api_py38:
+    docker:
+      - image: circleci/python:3.8.1
+    working_directory: ~/project/app
+    steps:
+      - checkout:
+          path: ~/project
+      - run:
+          name: Run API tests with Python 3.8
+          command: |
+            sudo pip install --upgrade pip
+            pip install --user tox
+            tox -e py38
+
+  train_and_upload_classification_model:
+    <<: *defaults
+    steps:
+      - checkout
+      - *prepare_venv
+      - run:
+          name: Install requirements
+          command: |
+            . venv/bin/activate
+            pip install -r model_package/classification_model/requirements.txt
+      #- *fetch_data
+      - run:
+          name: Train model
+          command: |
+            . venv/bin/activate
+            PYTHONPATH=./model_package/classification_model python3 model_package/classification_model/train_pipeline.py
+      #- run:
+      #    name: Publish model to Gemfury
+      #    command: |
+      #      . venv/bin/activate
+      #      chmod +x ./scripts/publish_model.sh
+      #      ./scripts/publish_model.sh ./packages/classification_model/
+
+
+
+  
+
+  
+
+tags_only: &tags_only
+  filters:
+    branches:
+      ignore: /.*/
+    tags:
+      only: /^.*/
+
+workflows:
+  version: 2
+  section_07:
+    jobs:
+      - section_07_test_app
+      - section_07_deploy_app_to_heroku:
+          requires:
+            - section_07_test_app
+          filters:
+            branches:
+              only:
+                - master
+      # upload after git tags are created
+      - section_07_test_and_upload_classification_model:
+          <<: *tags_only
